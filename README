@@ -1,0 +1,97 @@
+Voinea Raul Cristian
+324CB
+
+
+                    Tema 3 - Protocoale de comunicatie
+                    Client Web. Comunicatie cu REST API
+
+        Scopul temei a fost de scris in C/C++ un client care sa 
+    interactioneze cu un REST API. Pentru rezolvarea acestei teme
+    m-am inspirat din rezolvarea laboratorului 10.
+        Comunicatia cu server-ul deja implementat se face prin rute
+    HTTP.
+        Clientul primeste comenzi de la tastatura si trimite cereri
+    la server. El functioneaza ca o interfata cu o biblioteca virtuala
+        Pentru a parsa raspunsurile primite de la server am folosit
+    biblioteca "parson" deoarece am scris codul in C.
+        Am declarat in afara while-ului cookies si tokens deoarece am
+    nevoie de acestea la comenzi diferite.
+        In while preiau de la tastatura comanda in variabila "cmd" si
+    verific ce fel de comanda e.
+
+    -> register:
+        - Creez un obiect JSON pentru inregistrare si setez 2
+        campuri -> username si password; am considerat ca lungimea
+        username-ului si a parolei nu pot fi mai mici de 4 caractere.
+
+    -> login:
+        - Pentru login am procedat asemanator doar ca am si extras
+        cookie-ul din mesajul primit de la server si il salvez pentru
+        alta comanda.
+        - Am facut o functie "take_cookie" care extrage string-ul
+        care contine doar cookie-ul. 
+
+    -> enter_library:
+        - Fac o cerere de tip GET pentru a avea acces in biblioteca
+        in care pun si cookie-ul pentru a demonstra ca suntem logati.
+        - Din raspunsul primit de la server preiau token-ul JWT
+        cu functia "take_JWT" si il salvez pentru urmatoarele
+        comenzi.
+        - Functia "take_JWT" prefixeaza token-ul cu "Bearer ".
+
+    -> get_books:
+        - Fac o cerere de tip GET pentru a avea acces la cartile
+        din biblioteca in care pun token-ul JWT pentru a demonstra
+        ca am primit accesul in biblioteca.
+        - Am facut o functie "print_all_books" care afiseaza la
+        stdout toate cartile la care am primit acces.
+
+    -> get_book:
+        - Verific daca am token-ul JWT. Daca da inseamna ca am
+        primit acces in biblioteca.
+        - Preiau id-ul de la tastatura, creez adresa URL si fac
+        o cerere de tip GET la server.
+        - Am facut o functie "print_one_book" care afiseaza la
+        stdout cartea pe care am facut cerere.
+
+    -> add_book:
+        - La fel ca mai sus verific daca am acces in biblioteca.
+        - Creez o carte de tip obiect JSON, ii setez campurile
+        cu ajutorul functiei "set_book_object".
+        - In aceasta functie verific ca pe campul "page_count"
+        sa primesc un numar.
+        - Creez un payload in care introduc cartea creeata
+        pentru cererea de tip POST.
+
+    -> delete_book:
+        - La fel ca mai sus verific daca am acces in biblioteca.
+        - Preiau id-ul de la tastatura, creez adresa URL si fac
+        o cerere de tip DELETE la server pentru a sterge cartea.
+
+    -> logout:
+        - Fac o cerere de tip GET pentru logout.
+        - Sterg token-urile si cookie-urile.
+        - Afisez mesajul primit de la server.
+    
+    -> exit:
+        - cu break ies din while si clientul se inchide.
+
+    La final eliberez memorie ocupata de char*.
+
+    Mentiuni:
+        - la fiecare comanda se deschide conexiunea cu server-ul;
+        - am facut o functie "print_server_response" care afiseaza
+    la stdout daca cererea a avut succes sau a avut erori si ce
+    erori a avut; functia afiseaza de asemenea si cartea/cartile
+    daca cererea a fost de tip get_book/s;
+        - am creat o functie "compute_delete_request" care este
+    asemanatoare cu cea de tip GET pentru cererea de tip DELETE
+    cand se sterge o carte;
+        - am modificat cele 3 functii de request astfel incat sa
+    adauge si Authorization header daca avem token JWT.
+
+    Feedback:
+        - am invatat cum arata si cum se contruieste un request
+    pentru protocolul HTTP.
+        - am invatat cum se utilizeaza cookies si tokens.
+
